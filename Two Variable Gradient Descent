@@ -1,0 +1,58 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 2-dimensional gradient descent function with 
+# learning rate(alpha), precision(prec), model function(f), and initial values x
+def gD_2d (alpha, prec, f, x):
+	# initial values with each column a different variable
+	x = np.array([x])	
+
+	# returns the local gradient of the function around the input coordinates
+	def grad(x_n):
+		grad = np.empty(2)
+		grad[0] = (f(x_n[0]+0.001, x_n[1]) - f(x_n[0]-0.001, x_n[1]))/0.002
+		grad[1] = (f(x_n[0], x_n[1]+0.001) - f(x_n[0], x_n[1]-0.001))/0.002
+		return grad
+
+	# performs descent until specified precision is reached
+	i = 0
+	x_i = x[0,:]
+	while np.sum(abs(alpha * grad(x_i))) > prec :
+		x_i = x_i - alpha * grad(x_i)	 # update coordinate values using gradient descent algorithm
+		x = np.vstack((x,np.array(x_i))) # add new coordinates as row to coordinate array
+		i+=1
+		
+	# print minimum coordinates and number of iterations
+	print "Minimum found at: (",round(x[-1,0],2),",",round(x[-1,1],2),",",round(f(x[-1,0],x[-1,1]),2),")"
+	print "Iterations: ", i
+
+	# countour plot model function, descent coordinates, and minimum value
+	plt.figure(num=None, figsize=(18, 12), dpi=80, facecolor='w', edgecolor='k')
+	plt.plot(x[:,0],x[:,1],'x--k', label = 'descent values')
+	plt.plot(x[-1,0],x[-1,1],'or', label = 'minimum')
+	X, Y = np.meshgrid(x_data, y_data)
+	plt.contourf(X, Y, f(X, Y));
+	plt.colorbar()
+	plt.title('Gradient Descent (2D)')
+	plt.legend(loc='upper right',prop={'size':24})
+	plt.show()
+
+# 2-D model functions
+def z_1(x,y):
+	return -(3*np.sin(x**2 + y**2) / (x**2 + y**2 + 1) + np.cos(x + 2*y) + 2)
+def z_2(x,y):
+	return x**2-(5*np.sin(x**2 + y**2) / (x**2 + y**2 + 3) + np.cos(x**2 + 2*y) + 2)
+
+# create coordinate data for plotting
+N = 500 # number of points
+x_data = np.linspace(-4,4,N) # x data
+y_data = np.linspace(-4,4,N) # y data
+# perform gradient descent using z(x,y)
+gD_2d(0.1,0.001,z_1,[1,1])
+
+# create coordinate data for plotting
+N = 500 # number of points
+x_data = np.linspace(-4,4,N) # x data
+y_data = np.linspace(-4,4,N) # y data
+# perform gradient descent using z(x,y)
+gD_2d(0.1,0.001,z_2,[3,2])
