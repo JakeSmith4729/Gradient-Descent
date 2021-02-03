@@ -1,0 +1,47 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 1-dimensional gradient descent function with 
+# learning rate(alpha), precision(prec), model function(f), and initial value x
+def gD_1d (alpha,prec,f,x):
+	x = np.array([x])	# initial x-value
+
+	# returns the local gradient of the function around the input coordinates
+	def grad(x_n):
+		return ((f(x_n+0.001) - f(x_n-0.001))/0.002)
+
+	# performs descent until specified precision is reached
+	i = 0
+	while (abs(alpha * grad(x[i])) > prec) & (i <10) :
+		x = np.append(x,x[i]-alpha * grad(x[i]))	# update x with gradient descent algorithm 
+		i+=1
+
+	min_x = round(x[-1],2)
+	# print minimum coordinates and number of iterations
+	print "Minimum found at: (",min_x,",",round(f(min_x),2),")"
+	print "Iterations: ", i 
+
+	# plot model function, descent values, and minimum value
+	plt.figure(num=None, figsize=(18, 12), dpi=80, facecolor='w', edgecolor='k')
+	plt.plot(x_data,f(x_data),'k', label = 'f(x)')
+	plt.plot(x,f(x),'bx--', label = 'descent values')
+	plt.plot(x[-1],f(x[-1]),'ro',label = 'minimum')
+	plt.title('Gradient Descent (1D)')
+	plt.legend(loc='upper right',prop={'size':24})
+	plt.show()
+
+# model functions
+def y_1(x):
+	return 100 + (30 * np.square(x))
+def y_2(x):
+	return (2*(x**3)) -(3*x) + (x**4)
+def y_3(x):
+	return (2*(x**3)) -(3*x) + (x**4)
+
+x_data = np.linspace(-5,5,500) # x data
+# perform gradient descent using y_1(x)
+gD_1d(0.01,0.0001,y_1,4)
+
+x_data = np.linspace(-1.5,1.5,500) # x data
+# perform gradient descent using y_1(x)
+gD_1d(0.01,0.0001,y_2,1)
