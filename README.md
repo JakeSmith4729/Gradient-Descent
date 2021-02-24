@@ -1,1 +1,1 @@
-A collection of gradient descent algorithms written from scratch.
+A collection of gradient descent algorithms. 
